@@ -61,7 +61,7 @@ def update_event(event_id: int, event: EventCreateSchema, db: Session = Depends(
             "EventImageUrl": db_event.fileLinks[0],
             "EventUrl": ""
         }
-        response = requests.post("http://localhost:5051/notification/ModificacionEmail", json=payload, verify=False)
+        response = requests.post("https://dockernotificaciones.onrender.com", json=payload, verify=False)
 
         if response.status_code != 200:
             print(f"Failed to send notification to {u.email}. Status code: {response.status_code}")
