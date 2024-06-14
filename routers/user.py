@@ -38,7 +38,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return UserSchema.from_orm(user)
 
-@router.get("search/{user_email}", response_model=UserSchema)
+@router.get("/search/{user_email}", response_model=UserSchema)
 def read_userEmail(user_email, db: Session = Depends(get_db)):
     user = db.query(UserModel).filter(UserModel.email == user_email).first()
     if user is None:
