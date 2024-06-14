@@ -4,6 +4,7 @@ from typing import List
 from database import SessionLocal
 from models.reservation import Reservation as ReservationModel
 from schemas.reservation import Reservation as ReservationSchema, ReservationCreate as ReservationCreateSchema
+from schemas.event import Event as EventSchema
 
 router = APIRouter()
 
@@ -59,3 +60,9 @@ def delete_reservation(reservation_id: int, db: Session = Depends(get_db)):
     db.delete(db_reservation)
     db.commit()
     return ReservationSchema.from_orm(db_reservation)
+
+@router.get("/user/{user_id}/events", response_model=List[EventSchema])
+def read_user_reserved_events(user_id: int, db: Session = Depends(get_db)):
+    reservations = db.query(ReservationModel).filter(ReservationModel.user_id == user_id).all()
+    events = [reservation.event for reservation in reservations]
+    return [EventSchema.from_orm(event) for event in events]
