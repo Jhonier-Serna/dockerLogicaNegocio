@@ -38,6 +38,13 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return UserSchema.from_orm(user)
 
+@router.get("search/{user_email}", response_model=UserSchema)
+def read_userEmail(user_email, db: Session = Depends(get_db)):
+    user = db.query(UserModel).filter(UserModel.email == user_email).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return UserSchema.from_orm(user)
+
 
 @router.put("/{user_id}", response_model=UserSchema)
 def update_user(user_id: int, user: UserCreateSchema, db: Session = Depends(get_db)):
@@ -59,3 +66,5 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     db.delete(db_user)
     db.commit()
     return UserSchema.from_orm(db_user)
+
+
